@@ -1,69 +1,68 @@
-drop table dim_gen_time;
-truncate table dim_gen_time;
-create table dim_gen_time
-as
-(
-select t_days.TIME_ID TIME_ID,
-t_days.DAY_NAME DAY_NAME,
-t_days.DAY_NUMBER_IN_WEEK DAY_NUMBER_IN_WEEK_ISO,
-t_days.DAY_NUMBER_IN_MONTH DAY_NUMBER_IN_MONTH_ISO,
-t_days.DAY_NUMBER_IN_YEAR DAY_NUMBER_IN_YEAR_ISO,
-t_weeks.WEEK_ID WEEK_ID,
-t_weeks.WEEK_BEG_DATE WEEK_BEG_DATE,
-t_weeks.WEEK_ENDING_DATE WEEK_ENDING_DATE,
-t_months.MONTH_ID MONTH_ID_ISO,
-t_months.CALENDAR_MONTH_NUMBER CALENDAR_MONTH_NUMBER_ISO,
-t_months.DAYS_IN_CAL_MONTH DAYS_IN_CAL_MONTH_ISO,
-t_months.BEG_OF_CAL_MONTH BEG_OF_CAL_MONTH_ISO,
-t_months.END_OF_CAL_MONTH END_OF_CAL_MONTH_ISO,
-t_months.CALENDAR_MONTH_NAME CALENDAR_MONTH_NAME_ISO,
-m.MONTH_ID MONTH_ID_fin,
-m.CALENDAR_MONTH_NUMBER CALENDAR_MONTH_NUMBER_fin,
-m.DAYS_IN_CAL_MONTH DAYS_IN_CAL_MONTH_fin,
-m.BEG_OF_CAL_MONTH BEG_OF_CAL_MONTH_fin,
-m.END_OF_CAL_MONTH END_OF_CAL_MONTH_fin,
-m.CALENDAR_MONTH_NAME CALENDAR_MONTH_NAME_fin,
-t_quarters.QUARTER_ID QUARTER_ID_ISO,
-t_quarters.DAYS_IN_CAL_QUARTER DAYS_IN_CAL_QUARTER_ISO,
-t_quarters.BEG_OF_CAL_QUARTER BEG_OF_CAL_QUARTER_ISO,
-t_quarters.END_OF_CAL_QUARTER END_OF_CAL_QUARTER_ISO,
-t_quarters.CALENDAR_QUARTER_NUMBER CALENDAR_QUARTER_NUMBER_ISO,
-q.QUARTER_ID QUARTER_ID_fin,
-q.DAYS_IN_CAL_QUARTER DAYS_IN_CAL_QUARTER_fin,
-q.BEG_OF_CAL_QUARTER BEG_OF_CAL_QUARTER_fin,
-q.END_OF_CAL_QUARTER END_OF_CAL_QUARTER_fin,
-q.CALENDAR_QUARTER_NUMBER CALENDAR_QUARTER_NUMBER_fin,
-t_years.YEAR_ID YEAR_ID_ISO,
-t_years.CALENDAR_YEAR CALENDAR_YEAR_ISO,
-t_years.DAYS_IN_CAL_YEAR DAYS_IN_CAL_YEAR_ISO,
-t_years.BEG_OF_CAL_YEAR BEG_OF_CAL_YEAR_ISO,
-t_years.END_OF_CAL_YEAR END_OF_CAL_YEAR_ISO,
-y.YEAR_ID YEAR_ID_fin,
-y.CALENDAR_YEAR CALENDAR_YEAR_fin,
-y.DAYS_IN_CAL_YEAR DAYS_IN_CAL_YEAR_fin,
-y.BEG_OF_CAL_YEAR BEG_OF_CAL_YEAR_fin,
-y.END_OF_CAL_YEAR END_OF_CAL_YEAR_fin
-from t_days
-inner join t_weeks on t_days.time_id between week_beg_date and week_ending_date
-inner join t_months on t_days.time_id between beg_of_cal_month and end_of_cal_month and type = 'iso'
-inner join t_months m on t_days.time_id between m.beg_of_cal_month and m.end_of_cal_month and m.type = 'fin'
-inner join t_quarters on t_days.time_id between t_quarters.beg_of_cal_quarter and t_quarters.end_of_cal_quarter and t_quarters.type = 'iso'
-inner join t_quarters q on t_days.time_id between q.beg_of_cal_quarter and q.end_of_cal_quarter and q.type = 'fin'
-inner join t_years on t_days.time_id between t_years.beg_of_cal_year and t_years.end_of_cal_year and t_years.type = 'iso'
-inner join t_years y on t_days.time_id between y.beg_of_cal_year and y.end_of_cal_year and y.type = 'fin'
-);
+DROP TABLE dim_gen_time;
 
-ALTER TABLE dim_gen_time
-ADD CONSTRAINT calendar_id_pk  PRIMARY KEY (time_id);
+TRUNCATE TABLE dim_gen_time;
 
+CREATE TABLE dim_gen_time
+    AS
+        ( SELECT
+            t_days.time_id                        time_id,
+            t_days.day_name                       day_name,
+            t_days.day_number_in_week             day_number_in_week_iso,
+            t_days.day_number_in_month            day_number_in_month_iso,
+            t_days.day_number_in_year             day_number_in_year_iso,
+            t_weeks.week_id                       week_id,
+            t_weeks.week_beg_date                 week_beg_date,
+            t_weeks.week_ending_date              week_ending_date,
+            t_months.month_id                     month_id_iso,
+            t_months.calendar_month_number        calendar_month_number_iso,
+            t_months.days_in_cal_month            days_in_cal_month_iso,
+            t_months.beg_of_cal_month             beg_of_cal_month_iso,
+            t_months.end_of_cal_month             end_of_cal_month_iso,
+            t_months.calendar_month_name          calendar_month_name_iso,
+            m.month_id                            month_id_fin,
+            m.calendar_month_number               calendar_month_number_fin,
+            m.days_in_cal_month                   days_in_cal_month_fin,
+            m.beg_of_cal_month                    beg_of_cal_month_fin,
+            m.end_of_cal_month                    end_of_cal_month_fin,
+            m.calendar_month_name                 calendar_month_name_fin,
+            t_quarters.quarter_id                 quarter_id_iso,
+            t_quarters.days_in_cal_quarter        days_in_cal_quarter_iso,
+            t_quarters.beg_of_cal_quarter         beg_of_cal_quarter_iso,
+            t_quarters.end_of_cal_quarter         end_of_cal_quarter_iso,
+            t_quarters.calendar_quarter_number    calendar_quarter_number_iso,
+            q.quarter_id                          quarter_id_fin,
+            q.days_in_cal_quarter                 days_in_cal_quarter_fin,
+            q.beg_of_cal_quarter                  beg_of_cal_quarter_fin,
+            q.end_of_cal_quarter                  end_of_cal_quarter_fin,
+            q.calendar_quarter_number             calendar_quarter_number_fin,
+            t_years.year_id                       year_id_iso,
+            t_years.calendar_year                 calendar_year_iso,
+            t_years.days_in_cal_year              days_in_cal_year_iso,
+            t_years.beg_of_cal_year               beg_of_cal_year_iso,
+            t_years.end_of_cal_year               end_of_cal_year_iso,
+            y.year_id                             year_id_fin,
+            y.calendar_year                       calendar_year_fin,
+            y.days_in_cal_year                    days_in_cal_year_fin,
+            y.beg_of_cal_year                     beg_of_cal_year_fin,
+            y.end_of_cal_year                     end_of_cal_year_fin
+        FROM
+                 t_days
+            INNER JOIN t_weeks ON t_days.time_id BETWEEN week_beg_date AND week_ending_date
+            INNER JOIN t_months ON t_days.time_id BETWEEN beg_of_cal_month AND end_of_cal_month
+                                   AND type = 'iso'
+            INNER JOIN t_months    m ON t_days.time_id BETWEEN m.beg_of_cal_month AND m.end_of_cal_month
+                                     AND m.type = 'fin'
+            INNER JOIN t_quarters ON t_days.time_id BETWEEN t_quarters.beg_of_cal_quarter AND t_quarters.end_of_cal_quarter
+                                     AND t_quarters.type = 'iso'
+            INNER JOIN t_quarters  q ON t_days.time_id BETWEEN q.beg_of_cal_quarter AND q.end_of_cal_quarter
+                                       AND q.type = 'fin'
+            INNER JOIN t_years ON t_days.time_id BETWEEN t_years.beg_of_cal_year AND t_years.end_of_cal_year
+                                  AND t_years.type = 'iso'
+            INNER JOIN t_years     y ON t_days.time_id BETWEEN y.beg_of_cal_year AND y.end_of_cal_year
+                                    AND y.type = 'fin'
+        );
 
-
-
-
-
-
-
-
+ALTER TABLE dim_gen_time ADD CONSTRAINT calendar_id_pk PRIMARY KEY ( time_id );
 
 
 
