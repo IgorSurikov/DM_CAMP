@@ -9,14 +9,18 @@ create or replace PACKAGE BODY pkg_etl_dim_sales_dw AS
                 geo_id,
                 customer_id,
                 product_code,
-                period_id
+                period_id,
+                insert_dt,
+                update_dt
             )
                 SELECT
                     sa.event_dt      event_dt,
                     g.geo_id         geo_id,
                     c.customer_id    customer_id,
                     p.product_code     product_code,
-                    ps.period_id     period_id
+                    ps.period_id     period_id,
+                    sysdate,
+                    sysdate
                 FROM
                          sa_sales sa
                     INNER JOIN t_customers     c ON ( sa.customer_name = c.customer_name
